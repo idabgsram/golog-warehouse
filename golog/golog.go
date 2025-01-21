@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -17,6 +18,7 @@ type LogWarehouse struct {
 	channel      string
 	username     string
 	warehouseKey string
+	isSilentMode bool
 }
 
 type LogData struct {
@@ -65,18 +67,38 @@ func connectWarehouse() {
 }
 
 func New() {
+	if strings.Contains(strings.ToLower(os.Getenv("SLACK_USERNAME")), "test") ||
+		strings.Contains(strings.ToLower(os.Getenv("GOLOG_USERNAME")), "test") {
+		Log = LogWarehouse{
+			isSilentMode: true,
+		}
+		Slack = &Log
+		return
+	}
+
 	Log = LogWarehouse{
-		channel:  GetEnv("GOLOG_CHANNEL"),
-		username: GetEnv("GOLOG_USERNAME"),
+		channel:      GetEnv("GOLOG_CHANNEL"),
+		username:     GetEnv("GOLOG_USERNAME"),
+		isSilentMode: false,
 	}
 	Slack = &Log
 	connectWarehouse()
 }
 
 func NewCustomInstance(channel string, username string, url string) {
+	if strings.Contains(strings.ToLower(os.Getenv("SLACK_USERNAME")), "test") ||
+		strings.Contains(strings.ToLower(os.Getenv("GOLOG_USERNAME")), "test") {
+		Log = LogWarehouse{
+			isSilentMode: true,
+		}
+		Slack = &Log
+		return
+	}
+
 	Log = LogWarehouse{
-		username: username,
-		channel:  channel,
+		username:     username,
+		channel:      channel,
+		isSilentMode: false,
 	}
 	Slack = &Log
 	connectWarehouse()
@@ -93,6 +115,10 @@ func GetEnv(key string) string {
 }
 
 func (s *LogWarehouse) sendToWarehouse(payload LogData) {
+
+	if s.isSilentMode {
+		return
+	}
 
 	payload.WorkerUsername = s.username
 	payload.WorkerChannel = s.channel
