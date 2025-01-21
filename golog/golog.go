@@ -15,8 +15,8 @@ import (
 var RedisClient *redis.Client
 
 type LogWarehouse struct {
-	channel      string
-	username     string
+	Channel      string
+	Username     string
 	distribution string
 	warehouseKey string
 	isSilentMode bool
@@ -79,8 +79,8 @@ func New() {
 	}
 
 	Log = LogWarehouse{
-		channel:      GetEnv("GOLOG_CHANNEL"),
-		username:     GetEnv("GOLOG_USERNAME"),
+		Channel:      GetEnv("GOLOG_CHANNEL"),
+		Username:     GetEnv("GOLOG_USERNAME"),
 		distribution: os.Getenv("GOLOG_DISTRIBUTION_MEDIA"),
 		isSilentMode: false,
 	}
@@ -99,8 +99,8 @@ func NewCustomInstance(channel string, username string, url string) {
 	}
 
 	Log = LogWarehouse{
-		username:     username,
-		channel:      channel,
+		Username:     username,
+		Channel:      channel,
 		distribution: os.Getenv("GOLOG_DISTRIBUTION_MEDIA"),
 		isSilentMode: false,
 	}
@@ -124,8 +124,8 @@ func (s *LogWarehouse) sendToWarehouse(payload LogData) {
 		return
 	}
 
-	payload.WorkerUsername = s.username
-	payload.WorkerChannel = s.channel
+	payload.WorkerUsername = s.Username
+	payload.WorkerChannel = s.Channel
 	payload.DistributionMedia = s.distribution
 	payload.StoredAt = time.Now()
 
