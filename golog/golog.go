@@ -17,20 +17,22 @@ var RedisClient *redis.Client
 type LogWarehouse struct {
 	channel      string
 	username     string
+	distribution string
 	warehouseKey string
 	isSilentMode bool
 }
 
 type LogData struct {
-	WorkerChannel  string    `json:"worker_channel"`
-	WorkerUsername string    `json:"worker_username"`
-	Message        string    `json:"message"`
-	Level          string    `json:"level"`
-	Color          string    `json:"color"`
-	Emoji          string    `json:"emoji"`
-	Data           *string   `json:"data"`
-	Exception      *string   `json:"exception"`
-	StoredAt       time.Time `json:"stored_at"`
+	WorkerChannel     string    `json:"worker_channel"`
+	WorkerUsername    string    `json:"worker_username"`
+	Message           string    `json:"message"`
+	DistributionMedia string    `json:"distribution_media"`
+	Level             string    `json:"level"`
+	Color             string    `json:"color"`
+	Emoji             string    `json:"emoji"`
+	Data              *string   `json:"data"`
+	Exception         *string   `json:"exception"`
+	StoredAt          time.Time `json:"stored_at"`
 }
 
 var Slack *LogWarehouse
@@ -79,6 +81,7 @@ func New() {
 	Log = LogWarehouse{
 		channel:      GetEnv("GOLOG_CHANNEL"),
 		username:     GetEnv("GOLOG_USERNAME"),
+		distribution: os.Getenv("GOLOG_DISTRIBUTION_MEDIA"),
 		isSilentMode: false,
 	}
 	Slack = &Log
@@ -98,6 +101,7 @@ func NewCustomInstance(channel string, username string, url string) {
 	Log = LogWarehouse{
 		username:     username,
 		channel:      channel,
+		distribution: os.Getenv("GOLOG_DISTRIBUTION_MEDIA"),
 		isSilentMode: false,
 	}
 	Slack = &Log
@@ -122,6 +126,7 @@ func (s *LogWarehouse) sendToWarehouse(payload LogData) {
 
 	payload.WorkerUsername = s.username
 	payload.WorkerChannel = s.channel
+	payload.DistributionMedia = s.distribution
 	payload.StoredAt = time.Now()
 
 	pyl, _ := json.Marshal(payload)

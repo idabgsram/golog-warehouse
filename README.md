@@ -13,13 +13,14 @@ go get github.com/idabgsram/golog-warehouse
 
 ## Set Evironment Variable
 
-| Env Key | Note |
-| ------- | ----- |
-| GOLOG_CHANNEL | Your Log Channel Name | 
-| GOLOG_USERNAME | Your Log Username | 
-| GOLOG_WAREHOUSE_KEY | Your Log Warehouse Key (optional) | 
-| GOLOG_REDIS_URL | Your Redis URL | 
-| GOLOG_REDIS_HOST | Your Redis Host (if Redis URL Not Defined) |
-| GOLOG_REDIS_PASSWORD | Your Redis Password (if Redis URL Not Defined) |
-| GOLOG_REDIS_PORT | Your Redis Port (if Redis URL Not Defined) |
+| Env Key | Note | Example |
+| ------- | ----- | ----- |
+| GOLOG_CHANNEL | Your Log Channel Name | #log-channel |
+| GOLOG_USERNAME | Your Log Username | LogService |
+| GOLOG_WAREHOUSE_KEY | Your Log Warehouse Key (optional) | golog_warehouse |
+| GOLOG_DISTRIBUTION_MEDIA | Your Log Warehouse Distribution Media (optional) | discord,telegram |
+| GOLOG_REDIS_URL | Your Redis URL | redis://user:password@localhost:6379/2?protocol=3 |
+| GOLOG_REDIS_HOST | Your Redis Host (if Redis URL Not Defined) | localhost |
+| GOLOG_REDIS_PASSWORD | Your Redis Password (if Redis URL Not Defined) | password |
+| GOLOG_REDIS_PORT | Your Redis Port (if Redis URL Not Defined) | 6379 |
 
