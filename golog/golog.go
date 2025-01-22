@@ -119,6 +119,10 @@ func GetEnv(key string) string {
 }
 
 func (s *LogWarehouse) sendToWarehouse(payload LogData) {
+	if RedisClient == nil {
+		log.Println("Redis is not initialized, call golog.New() first")
+		return
+	}
 
 	if s.isSilentMode {
 		return
@@ -133,7 +137,7 @@ func (s *LogWarehouse) sendToWarehouse(payload LogData) {
 
 	err := RedisClient.RPush(context.Background(), s.warehouseKey, string(pyl)).Err()
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error on pushing to redis, err:%s\n", err.Error())
 	}
 }
 
